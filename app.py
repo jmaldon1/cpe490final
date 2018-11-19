@@ -8,7 +8,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
-# decorator that redirects logged in users
+# decorator that redirects user if they don't have a username
 def username_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -28,7 +28,6 @@ def username():
 @app.route('/chat', methods=['GET'])
 @username_required
 def chat():
-    # print(request.cookies)
     return render_template('chat.html')
 
 
@@ -38,7 +37,7 @@ def chat():
 userList = {}
 
 
-# creates and empty user dict with the client ID as the key
+# creates an empty user dict with the client ID as the key
 @socketio.on('connect')
 def connect():
     userList[request.sid] = {"username": '', "color": ''}
@@ -91,15 +90,15 @@ def handleMessage(msg):
 def handleCommand(cmd):
     # print(cmd)
     emit("messageEvent", '<li style="color:' + userList[request.sid]['color'] + ';">' +
-        cmd['message'] + '</li>', broadcast=True)
+         userList[request.sid]['username'] + cmd + '</li>', broadcast=True)
 
 
-# all commands to client pass through here
+# invalid command message will only be sent to the user who made the invalid command
 @socketio.on('invalidEvent')
 def invalidEvent(msg):
     # print(cmd)
     emit("messageEvent", '<li style="color:' + userList[request.sid]['color'] + ';">' +
-        msg + '</li>')
+         msg + '</li>')
 
 
 if __name__ == '__main__':
