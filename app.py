@@ -57,7 +57,7 @@ def set_color(color):
 
 # alerts everyone that a user connected
 @socketio.on('connectEvent')
-def connectEvent():
+def connect_event():
     emit('messageEvent', '<li style="color:' + userList[request.sid]['color'] + ';">' +
          userList[request.sid]['username'] + " has connected!" + '</li>', broadcast=True)
 
@@ -77,7 +77,7 @@ def ack(id):
 
 # all messages to client pass through here
 @socketio.on('messageEvent')
-def handleMessage(msg):
+def handle_message(msg):
     # print(msg)
     emit("messageEvent",
          '<li style="color:' + userList[request.sid]['color'] + ';">' +
@@ -87,7 +87,7 @@ def handleMessage(msg):
 
 # all commands to client pass through here
 @socketio.on('commandEvent')
-def handleCommand(cmd):
+def handle_command(cmd):
     # print(cmd)
     emit("messageEvent", '<li style="color:' + userList[request.sid]['color'] + ';">' +
          userList[request.sid]['username'] + cmd + '</li>', broadcast=True)
@@ -95,7 +95,7 @@ def handleCommand(cmd):
 
 # invalid command message will only be sent to the user who made the invalid command
 @socketio.on('invalidEvent')
-def invalidEvent(msg):
+def invalid_event(msg):
     # print(cmd)
     emit("messageEvent", '<li style="color:' + userList[request.sid]['color'] + ';">' +
          msg + '</li>')
