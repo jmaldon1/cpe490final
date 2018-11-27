@@ -16,8 +16,6 @@ $(document).ready(function() {
 	$('#disconnectButton').on('click', function() {
 		// disconnects a client
 		socket.close()
-		// clear the users cookie
-		document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 	});
 
 	// when a user presses enter in the text box, the send button will be pressed
@@ -61,6 +59,10 @@ $(document).ready(function() {
 
 	// when user disconnects, redirect them to username page
 	socket.on('disconnect', function(user){
+		// clear the users cookie
+		document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+		//redirect user to username page
 		window.location.href = '/';
 	})
 
