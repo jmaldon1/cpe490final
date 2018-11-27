@@ -49,6 +49,17 @@ def set_user(user):
     userList[request.sid]['username'] = user
 
 
+# get all users currently connected
+@socketio.on('getUser')
+def get_user():
+    user_string = ''
+    for user in userList.values():
+        user_string += str(user['username']) + '</br>'
+
+    emit("messageEvent", '<li style="color:' + userList[request.sid]['color'] + ';">' +
+         'Users online:</br>' + user_string + '</li>')
+
+
 # set users text color
 @socketio.on('setColor')
 def set_color(color):

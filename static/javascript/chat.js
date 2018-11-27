@@ -34,19 +34,23 @@ $(document).ready(function() {
 		// commands that the user can type
 		if (messageStr.startsWith('/')){
 			var parsedMsg = messageStr.split(' ')
-			if(parsedMsg.length < 2 || parsedMsg[1].trim === ''){
-				socket.emit('invalidEvent', 'Please enter a value after the command, example: /color blue')
-			}else if (parsedMsg[0] === '/nickname'){
-				socket.emit('commandEvent', ' changed their username to ' + parsedMsg[1]);
-				socket.emit('setUser', parsedMsg[1])
-				document.cookie = "username=" + parsedMsg[1];
-				username = parsedMsg[1];
-			} else if(parsedMsg[0] === '/color'){
-				socket.emit('setColor', parsedMsg[1])
-				socket.emit('commandEvent', ' changed their text color to ' + parsedMsg[1]);
-			} else{
-				// console.log('invalid')
-				socket.emit('invalidEvent', parsedMsg[0] + ' is an invalid command');
+			if(parsedMsg[0] === '/users'){
+				socket.emit('getUser')
+			}else{
+				if(parsedMsg.length !== 2 || parsedMsg[1].trim === ''){
+					socket.emit('invalidEvent', 'Please enter a value after the command, example: /color blue')
+				}else if (parsedMsg[0] === '/nickname'){
+					socket.emit('commandEvent', ' changed their username to ' + parsedMsg[1]);
+					socket.emit('setUser', parsedMsg[1])
+					document.cookie = "username=" + parsedMsg[1];
+					username = parsedMsg[1];
+				} else if(parsedMsg[0] === '/color'){
+					socket.emit('setColor', parsedMsg[1])
+					socket.emit('commandEvent', ' changed their text color to ' + parsedMsg[1]);
+				} else{
+					// console.log('invalid')
+					socket.emit('invalidEvent', parsedMsg[0] + ' is an invalid command');
+				}
 			}
 		}else{
 			socket.emit('messageEvent', messageStr);
